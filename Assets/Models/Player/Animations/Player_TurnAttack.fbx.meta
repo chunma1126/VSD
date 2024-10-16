@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b6daf8ff55865f14ab5d8d4add40f054
+guid: f4c04aa06d3bb574d820c921847ff8de
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -36,11 +36,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Attack
+      name: TurnAttack
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 84
+      lastFrame: 68
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -60,7 +60,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.58949643
+      - time: 0.6553795
         functionName: AnimationEnd
         data: 
         objectReferenceParameter: {instanceID: 0}

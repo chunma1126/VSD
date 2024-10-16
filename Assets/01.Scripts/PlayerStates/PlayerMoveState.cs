@@ -2,12 +2,12 @@
 
 public class PlayerMoveState : PlayerState
 {
-    private CharacterController CharacterController;
+    private PlayerMovement _movement;
     private Vector2 moveInput;
     private float yVelocity = 0;
     public PlayerMoveState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
-        CharacterController = Player.CharacterController;
+        _movement = Player.Movement;
     }
 
     public override void Enter()
@@ -24,8 +24,10 @@ public class PlayerMoveState : PlayerState
         {
             StateMachine.ChangeState(PlayerStateEnum.Idle);
         }
-                
-        CharacterController.Move(new Vector3(moveInput.x ,yVelocity , moveInput.y) * (Time.deltaTime * Player.moveSpeed));
+
+        _movement.SetMovement(new Vector3(moveInput.x * Player.moveSpeed, 0 , moveInput.y * Player.moveSpeed),true);
+        
+        
         LookAtMoveDirection();
     }
 

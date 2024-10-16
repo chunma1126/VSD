@@ -1,28 +1,28 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     private PlayerStateMachine StateMachine;
     
-    [SerializeField] public InputSO input;
+    public InputSO input;
         
     public float moveSpeed;
-
+    
     [Header("Attack Info")] 
     public LayerMask whatIsEnemy;
-    public Vector3[] attackMovement;
+    public Vector2[] attackMovement;//x
     public float attackDuration;
-    public bool isAttack;
-    
     
     public Animator Animator { get; private set; }
-    public CharacterController CharacterController { get; private set; }
+
+    public PlayerMovement Movement { get; private set; }
 
     private void Awake()
     {
         Animator = GetComponentInChildren<Animator>();
-        CharacterController = GetComponent<CharacterController>();
+        Movement = GetComponent<PlayerMovement>();
         
         StateMachine = new PlayerStateMachine();
         StateMachine.AddState(PlayerStateEnum.Idle , new PlayerIdleState(this ,StateMachine ,"Idle"));
@@ -48,12 +48,9 @@ public class Player : MonoBehaviour
         return input.MoveInput;
     }
 
-    private void EnterAttackState()
+    public void EnterAttackState()
     {
-        if (isAttack == false)
-        {
-            StateMachine.ChangeState(PlayerStateEnum.Attack);
-        }
+        StateMachine.ChangeState(PlayerStateEnum.Attack);
     }
 
     public void AnimationEndTrigger()
@@ -61,6 +58,17 @@ public class Player : MonoBehaviour
         StateMachine.currentState.AnimationTriggerCalled();
     }
     
+    public Coroutine StartDelayCallback(float time, Action Callback)
+    {
+        return StartCoroutine(DelayCoroutine(time, Callback));
+    }
+   
+    private IEnumerator DelayCoroutine(float time, Action Callback)
+    {
+        yield return new WaitForSeconds(time);
+        Callback?.Invoke();
+    }
+
     
     /*private void LookAtMouse()
     {
