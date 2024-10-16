@@ -5,11 +5,11 @@ public class PlayerAttackState : PlayerState
     private PlayerMovement _movement;
     
     private float lastAttackTime;
-    private int comboCounter;
     private float attackDuration;
     private int maxComboCount = 2;
 
     private int comboCountHash;
+    
     
     public PlayerAttackState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
@@ -21,27 +21,24 @@ public class PlayerAttackState : PlayerState
     public override void Enter()
     {
         base.Enter();
+
+        Player.canChangeState = false;
         
         _movement.StopImmediately();
         
-        
-        Player.input.OnAttackEvent -= Player.EnterAttackState;
-        
-        bool comoboCounterOver = comboCounter > maxComboCount;
+        bool comoboCounterOver = Player.comboCounter > maxComboCount;
         bool comboWindowExhaust = Time.time >= lastAttackTime + attackDuration;
 
         if (comoboCounterOver || comboWindowExhaust)
-            comboCounter = 0;
+            Player.comboCounter = 0;
         
-        Animator.SetInteger(comboCountHash , comboCounter);
+        Animator.SetInteger(comboCountHash , Player.comboCounter);
         
-        
-        _movement.SetMovement(Player.transform.forward * Player.attackMovement[comboCounter].y);
-        Player.StartDelayCallback(Player.attackMovement[comboCounter].x, () =>
+        _movement.SetMovement(Player.transform.forward * Player.attackMovement[Player.comboCounter].y);
+        Player.StartDelayCallback(Player.attackMovement[Player.comboCounter].x, () =>
         {
            _movement.StopImmediately();
         });
-
         
     }
 
@@ -57,9 +54,10 @@ public class PlayerAttackState : PlayerState
 
     public override void Exit()
     {
-        base.Exit(); 
-        comboCounter++;
-        Player.input.OnAttackEvent += Player.EnterAttackState;
+        base.Exit();
+        Player.canChangeState = true;
+        
+        Player.comboCounter++;
         
         lastAttackTime = Time.time;
     }

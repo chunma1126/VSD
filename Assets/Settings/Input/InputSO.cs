@@ -16,6 +16,7 @@ public class InputSO : ScriptableObject,Controls.IPlayerActions
 
     #region Actions
     public event Action OnAttackEvent;
+    public event Action OnDodgeEvent;
         
 
     #endregion
@@ -42,9 +43,16 @@ public class InputSO : ScriptableObject,Controls.IPlayerActions
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        OnAttackEvent?.Invoke();
+        if(context.performed)
+            OnAttackEvent?.Invoke();
     }
-    
+
+    public void OnDodge(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            OnDodgeEvent?.Invoke();
+    }
+
     public Vector3 GetMouseWorldPosition()
     {
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);

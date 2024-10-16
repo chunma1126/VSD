@@ -10,4 +10,9 @@ public class PlayerAnimationControls : MonoBehaviour
     {
         player.AnimationEndTrigger();
     }
+
+    private void PlaySlashEffect()
+    {
+        player.PlaySlashEffect();
+    }
 }

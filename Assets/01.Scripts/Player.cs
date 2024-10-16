@@ -9,28 +9,51 @@ public class Player : MonoBehaviour
     public InputSO input;
         
     public float moveSpeed;
+    public float dodgeSpeed;
     
     [Header("Attack Info")] 
     public LayerMask whatIsEnemy;
     public Vector2[] attackMovement;//x
     public float attackDuration;
+    public int comboCounter;
+    
+    
+    public bool canChangeState = true;
     
     public Animator Animator { get; private set; }
 
     public PlayerMovement Movement { get; private set; }
 
+    public VFXPlayer VFXPlayer { get; private set; }
+
+
     private void Awake()
     {
         Animator = GetComponentInChildren<Animator>();
         Movement = GetComponent<PlayerMovement>();
+        VFXPlayer = GetComponentInChildren<VFXPlayer>();
         
         StateMachine = new PlayerStateMachine();
         StateMachine.AddState(PlayerStateEnum.Idle , new PlayerIdleState(this ,StateMachine ,"Idle"));
         StateMachine.AddState(PlayerStateEnum.Move , new PlayerMoveState(this ,StateMachine ,"Move"));
         StateMachine.AddState(PlayerStateEnum.Attack , new PlayerAttackState(this,StateMachine,"Attack"));
+        StateMachine.AddState(PlayerStateEnum.Dodge , new PlayerDodgeState(this,StateMachine,"Dodge"));
         
-        input.OnAttackEvent += EnterAttackState;
+        input.OnAttackEvent += ()=>
+        {
+            if(!canChangeState)return;
+            
+            StateMachine.ChangeState(PlayerStateEnum.Attack);
+        };
+        input.OnDodgeEvent += ()=>
+        {
+            if(!canChangeState)return;
+            
+            StateMachine.ChangeState(PlayerStateEnum.Dodge);
+        };
     }
+    
+    
 
     private void Start()
     {
@@ -41,21 +64,20 @@ public class Player : MonoBehaviour
     {
         StateMachine.currentState.Update();
     }
-        
-
+    
     public Vector2 GetMoveInput()
     {
         return input.MoveInput;
     }
-
-    public void EnterAttackState()
-    {
-        StateMachine.ChangeState(PlayerStateEnum.Attack);
-    }
-
+    
     public void AnimationEndTrigger()
     {
         StateMachine.currentState.AnimationTriggerCalled();
+    }
+
+    public void PlaySlashEffect()
+    {
+        VFXPlayer.PlaySlashEffect(comboCounter);
     }
     
     public Coroutine StartDelayCallback(float time, Action Callback)
@@ -68,7 +90,9 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(time);
         Callback?.Invoke();
     }
-
+    
+     
+    
     
     /*private void LookAtMouse()
     {

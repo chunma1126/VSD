@@ -4,7 +4,6 @@ public class PlayerMoveState : PlayerState
 {
     private PlayerMovement _movement;
     private Vector2 moveInput;
-    private float yVelocity = 0;
     public PlayerMoveState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
         _movement = Player.Movement;
