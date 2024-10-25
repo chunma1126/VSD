@@ -15,4 +15,9 @@ public class PlayerAnimationControls : MonoBehaviour
     {
         player.PlaySlashEffect();
     }
+
+    private void DamageCast()
+    {
+        player.DamageCast();
+    }
 }

@@ -19,25 +19,29 @@ public class Player : MonoBehaviour
     
     
     public bool canChangeState = true;
-    
+
+    #region Component
     public Animator Animator { get; private set; }
-
     public PlayerMovement Movement { get; private set; }
-
-    public VFXPlayer VFXPlayer { get; private set; }
-
-
+    public PlayerVFX PlayerVFX { get; private set; }
+    public DamageCaster DamageCaster { get; private set; }
+    #endregion
     private void Awake()
     {
+        #region ComponentInitialize
         Animator = GetComponentInChildren<Animator>();
         Movement = GetComponent<PlayerMovement>();
-        VFXPlayer = GetComponentInChildren<VFXPlayer>();
+        PlayerVFX = GetComponentInChildren<PlayerVFX>();
+        DamageCaster = GetComponentInChildren<DamageCaster>();
+        #endregion
         
+        #region StateInitialize
         StateMachine = new PlayerStateMachine();
         StateMachine.AddState(PlayerStateEnum.Idle , new PlayerIdleState(this ,StateMachine ,"Idle"));
         StateMachine.AddState(PlayerStateEnum.Move , new PlayerMoveState(this ,StateMachine ,"Move"));
         StateMachine.AddState(PlayerStateEnum.Attack , new PlayerAttackState(this,StateMachine,"Attack"));
         StateMachine.AddState(PlayerStateEnum.Dodge , new PlayerDodgeState(this,StateMachine,"Dodge"));
+        #endregion      
         
         input.OnAttackEvent += ()=>
         {
@@ -52,7 +56,6 @@ public class Player : MonoBehaviour
             StateMachine.ChangeState(PlayerStateEnum.Dodge);
         };
     }
-    
     
 
     private void Start()
@@ -75,9 +78,15 @@ public class Player : MonoBehaviour
         StateMachine.currentState.AnimationTriggerCalled();
     }
 
+    public void DamageCast()
+    {
+        DamageCaster.DamageCast();
+    }
+    
+    
     public void PlaySlashEffect()
     {
-        VFXPlayer.PlaySlashEffect(comboCounter);
+        PlayerVFX.PlaySlashEffect(comboCounter);
     }
     
     public Coroutine StartDelayCallback(float time, Action Callback)
@@ -90,17 +99,5 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(time);
         Callback?.Invoke();
     }
-    
-     
-    
-    
-    /*private void LookAtMouse()
-    {
-        Vector3 mousePosition = input.GetMouseWorldPosition();
-        Vector3 direction = (mousePosition - transform.position).normalized;  
-        
-        Quaternion lookTarget = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Time.deltaTime * 10);
-    }*/
     
 }

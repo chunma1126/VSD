@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VFXPlayer : MonoBehaviour
+public class PlayerVFX : MonoBehaviour
 {
    [SerializeField] private ParticleSystem[] slashEffect;
    
