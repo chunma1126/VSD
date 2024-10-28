@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [CreateAssetMenu(menuName = "SO/InputSO")]
-public class InputSO : ScriptableObject,Controls.IPlayerActions
+public class InputSO : ScriptableObject,Controls.IPlayerActions,IPlayerComponent
 {
+    private Player Player;
     private Controls _controls;
 
     public LayerMask whatIsGround;
@@ -65,5 +66,10 @@ public class InputSO : ScriptableObject,Controls.IPlayerActions
         }
 
         return lastMousePostion;
+    }
+
+    public void Initialize(Player _player)
+    {
+        Player = _player;
     }
 }

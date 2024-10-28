@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class DamageCaster : MonoBehaviour
+public class DamageCaster : MonoBehaviour,IPlayerComponent
 {
+    private Player player;
     public float length;
     public float casterRadius;
     public float maxDistance;
@@ -49,5 +50,10 @@ public class DamageCaster : MonoBehaviour
         
         Gizmos.DrawWireSphere(endPosition, casterRadius);
         
+    }
+
+    public void Initialize(Player _player)
+    {
+        player = _player;
     }
 }
