@@ -77,6 +77,14 @@ public class Player : MonoBehaviour
         };
     }
     
+    public T GetCompo<T>() where T : class
+    {
+        if(_playerComponents.TryGetValue(typeof(T), out IPlayerComponent compo))
+        {
+            return compo as T;
+        }
+        return default;
+    }
 
     private void Start()
     {

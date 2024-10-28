@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour,IPlayerComponent
 {
+    private Player Player;
+    
     [SerializeField] private float _gravity = -9.8f;
+    
     
     protected CharacterController _characterController;
 
@@ -16,7 +19,12 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsGround => _characterController.isGrounded;
     private Quaternion _targetRotation;
-
+    
+    public void Initialize(Player _player)
+    {
+        Player = _player;
+    }
+    
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
@@ -84,6 +92,7 @@ public class PlayerMovement : MonoBehaviour
         player.StateMachine.ChangeState(PlayerStateEnum.Hurt);
 
     }*/
-    
-    
+
+
+   
 }

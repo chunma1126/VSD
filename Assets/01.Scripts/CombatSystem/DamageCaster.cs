@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class DamageCaster : MonoBehaviour,IPlayerComponent
@@ -9,7 +10,14 @@ public class DamageCaster : MonoBehaviour,IPlayerComponent
     public LayerMask whatIsEnemy;
 
     [SerializeField] private CameraShaker cameraShaker;
+    private PlayerStatManager PlayerStatManager;
     
+    
+    private void Start()
+    {
+        PlayerStatManager = player.GetCompo<PlayerStatManager>();
+    }
+
     public bool DamageCast()
     {
         bool isHit = Physics.SphereCast(GetStartPosition() , casterRadius , transform.forward, 
@@ -19,7 +27,7 @@ public class DamageCaster : MonoBehaviour,IPlayerComponent
         {
             if (hitInfo.collider.TryGetComponent(out IDamageable health))
             {
-                float testDamage = 10;
+                float testDamage = PlayerStatManager.GetStat(Stat.Damage);
                 
                 /*Vector3 direction = (hitInfo.point - transform.position).normalized;
                 Physics.Raycast(transform.position ,direction , out RaycastHit hitInfo2 , Mathf.Infinity, whatIsEnemy);
