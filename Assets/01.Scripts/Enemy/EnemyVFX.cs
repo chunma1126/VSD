@@ -1,12 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyVFX : MonoBehaviour
+public class EnemyVFX : MonoBehaviour,IEnemyComponent
 {
     private EnemyHealth _health;
-
+    private Enemy Enemy;
+    
+    
+    public void Initialize(Enemy enemy)
+    {
+        Enemy = enemy;
+    }
+    
     private void Start()
     {
         _health = GetComponentInParent<EnemyHealth>();
@@ -25,4 +29,6 @@ public class EnemyVFX : MonoBehaviour
     {
         _health.OnHitEvent -= HandleHitImpactPlay;
     }
+
+  
 }

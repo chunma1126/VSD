@@ -4,7 +4,8 @@ public enum EnemyStateEnum
 {
     Recovery,
     Chase,
-    Attack
+    Attack,
+    Dead
 }
 
 public class EnemyStateMachine
@@ -13,7 +14,7 @@ public class EnemyStateMachine
     public Dictionary<EnemyStateEnum, EnemyState> States = new();
     
     
-    private void Initialize(EnemyStateEnum enemyStateEnum)
+    public void Initialize(EnemyStateEnum enemyStateEnum)
     {
         currentEnemyState = States[enemyStateEnum];
         currentEnemyState.Enter();
