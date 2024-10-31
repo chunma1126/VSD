@@ -13,7 +13,7 @@ public class PlayerAttackState : PlayerState
     
     public PlayerAttackState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
-        _movement = player.Movement;
+        _movement = player.GetCompo<PlayerMovement>();
         attackDuration = player.attackDuration;
         comboCountHash = Animator.StringToHash("ComboCount");
     }

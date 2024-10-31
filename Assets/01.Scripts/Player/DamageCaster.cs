@@ -13,8 +13,9 @@ public class DamageCaster : MonoBehaviour,IPlayerComponent
     private PlayerStatManager PlayerStatManager;
     
     
-    private void Start()
+    public void Initialize(Player _player)
     {
+        player = _player;
         PlayerStatManager = player.GetCompo<PlayerStatManager>();
     }
 
@@ -27,14 +28,14 @@ public class DamageCaster : MonoBehaviour,IPlayerComponent
         {
             if (hitInfo.collider.TryGetComponent(out IDamageable health))
             {
-                float testDamage = PlayerStatManager.GetStat(Stat.Damage);
+                float currentDamage = PlayerStatManager.GetStat(Stat.Damage) * player.GetCurrentAttackCurrent();
                 
                 /*Vector3 direction = (hitInfo.point - transform.position).normalized;
                 Physics.Raycast(transform.position ,direction , out RaycastHit hitInfo2 , Mathf.Infinity, whatIsEnemy);
 
                 Vector3 hitImpactPos = hitInfo2.point + -direction * 0.4f; */
                 
-                health.GetDamage(new ActionData(hitInfo.normal , hitInfo.point + new Vector3(0,0.2f,0)  , testDamage , 3));
+                health.GetDamage(new ActionData(hitInfo.normal , hitInfo.point + new Vector3(0,0.2f,0)  , currentDamage , 3));
                 
                 cameraShaker.ShakeCam(0.07f);
             }
@@ -60,8 +61,5 @@ public class DamageCaster : MonoBehaviour,IPlayerComponent
         
     }
 
-    public void Initialize(Player _player)
-    {
-        player = _player;
-    }
+    
 }

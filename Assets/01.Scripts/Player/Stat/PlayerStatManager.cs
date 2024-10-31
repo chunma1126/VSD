@@ -7,6 +7,7 @@ public enum Stat
     Damage,
     AttackSpeed,
     MoveSpeed,
+    DodgeSpeed,
     Defense,
     CriticalPercent,
 }

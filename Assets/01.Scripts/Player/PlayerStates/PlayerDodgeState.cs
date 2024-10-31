@@ -3,11 +3,13 @@ using UnityEngine;
 public class PlayerDodgeState : PlayerState
 {
     private PlayerMovement Movement;
+    private PlayerStatManager StatManager;
     Vector3 dodgeDir ;
     
     public PlayerDodgeState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
-        Movement = Player.Movement;
+        Movement = Player.GetCompo<PlayerMovement>();
+        StatManager = player.GetCompo<PlayerStatManager>();
     }
 
     public override void Enter()
@@ -16,7 +18,7 @@ public class PlayerDodgeState : PlayerState
         Player.canChangeState = false;
         
         dodgeDir = Player.transform.forward;
-        Movement.SetMovement(dodgeDir * Player.dodgeSpeed);
+        Movement.SetMovement(dodgeDir * StatManager.GetStat(Stat.DodgeSpeed));
     }
 
     public override void Update()

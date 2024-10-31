@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -9,25 +10,17 @@ public class Player : MonoBehaviour
     private PlayerStateMachine StateMachine;
     
     public InputSO input;
-        
-    public float moveSpeed;
-    public float dodgeSpeed;
     
     [Header("Attack Info")] 
-    public LayerMask whatIsEnemy;
+    public float[] attackDamagePercent;
     public Vector2[] attackMovement;//x
     public float attackDuration;
     public int comboCounter;
-    
     
     public bool canChangeState = true;
 
     #region Component
     public Animator Animator { get; private set; }
-    public PlayerMovement Movement { get; private set; }
-    public PlayerVFX PlayerVFX { get; private set; }
-    public PlayerStatManager StatManager { get; private set; }
-    public DamageCaster DamageCaster { get; private set; }
     #endregion
     
     private Dictionary<Type, IPlayerComponent> _playerComponents;
@@ -36,9 +29,7 @@ public class Player : MonoBehaviour
     {
         #region PlayerComponentInitialize
         _playerComponents = new Dictionary<Type, IPlayerComponent>();
-        GetComponentsInChildren<IPlayerComponent>()
-            .ToList()
-            .ForEach(compo => _playerComponents.Add(compo.GetType(), compo));
+        GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(compo => _playerComponents.Add(compo.GetType(), compo));
         _playerComponents.Add(input.GetType(), input);
         
         foreach (var compo in _playerComponents.Values)
@@ -49,10 +40,6 @@ public class Player : MonoBehaviour
         
         #region ComponentInitialize
         Animator = GetComponentInChildren<Animator>();
-        Movement = GetComponent<PlayerMovement>();
-        PlayerVFX = GetComponentInChildren<PlayerVFX>();
-        DamageCaster = GetComponentInChildren<DamageCaster>();
-        StatManager = GetComponent<PlayerStatManager>();
         #endregion
         
         #region StateInitialize
@@ -108,13 +95,18 @@ public class Player : MonoBehaviour
 
     public void DamageCast()
     {
-        DamageCaster.DamageCast();
+        GetCompo<DamageCaster>().DamageCast();
     }
     
     
     public void PlaySlashEffect()
     {
-        PlayerVFX.PlaySlashEffect(comboCounter);
+        GetCompo<PlayerVFX>().PlaySlashEffect(comboCounter);
+    }
+
+    public float GetCurrentAttackCurrent()
+    {
+        return attackDamagePercent[comboCounter];
     }
     
     public Coroutine StartDelayCallback(float time, Action Callback)
@@ -127,5 +119,4 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(time);
         Callback?.Invoke();
     }
-    
 }

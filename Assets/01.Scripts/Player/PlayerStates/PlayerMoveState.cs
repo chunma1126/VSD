@@ -4,9 +4,13 @@ public class PlayerMoveState : PlayerState
 {
     private PlayerMovement _movement;
     private Vector2 moveInput;
+    
+    private PlayerStatManager StatManager;
+    
     public PlayerMoveState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
-        _movement = Player.Movement;
+        _movement = Player.GetCompo<PlayerMovement>();
+        StatManager = player.GetCompo<PlayerStatManager>();
     }
 
     public override void Enter()
@@ -24,9 +28,9 @@ public class PlayerMoveState : PlayerState
             StateMachine.ChangeState(PlayerStateEnum.Idle);
         }
 
-        _movement.SetMovement(new Vector3(moveInput.x * Player.moveSpeed, 0 , moveInput.y * Player.moveSpeed),true);
-        
-        
+        float speed = StatManager.GetStat(Stat.MoveSpeed);
+        _movement.SetMovement(new Vector3(moveInput.x * speed, 0 , moveInput.y * speed),true);
+                
         LookAtMoveDirection();
     }
 

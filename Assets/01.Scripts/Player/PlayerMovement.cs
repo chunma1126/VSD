@@ -7,8 +7,8 @@ public class PlayerMovement : MonoBehaviour,IPlayerComponent
 {
     private Player Player;
     
-    [SerializeField] private float _gravity = -9.8f;
     
+    [SerializeField] private float _gravity = -9.8f;
     
     protected CharacterController _characterController;
 
